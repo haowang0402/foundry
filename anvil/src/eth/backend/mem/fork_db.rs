@@ -1,6 +1,5 @@
 use crate::{
     eth::backend::db::{Db, MaybeHashDatabase, SerializableState, StateDb},
-    eth::macros::node_info,
     revm::AccountInfo,
     Address, U256,
 };

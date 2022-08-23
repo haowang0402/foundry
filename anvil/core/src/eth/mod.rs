@@ -325,7 +325,7 @@ pub enum EthRequest {
     DumpState(()),
 
 
-    #[serde(rename = "anvil_dumpStateJson", alias = "hardhat_dumpState", with = "empty_params")]
+    #[serde(rename = "anvil_dumpStateJson", alias = "hardhat_dumpStateJson", with = "empty_params")]
     DumpStateJson(()),
     /// Adds state previously dumped with `DumpState` to the current chain
     #[serde(rename = "anvil_loadState", alias = "hardhat_loadState", with = "sequence")]

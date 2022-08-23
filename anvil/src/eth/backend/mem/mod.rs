@@ -516,7 +516,7 @@ impl Backend {
             .dump_state_to_json()
             .ok_or_else(|| {
                 RpcError::invalid_params(
-                    "Dumping state not supported with the current configuration",
+                    "Dumping state json not supported with the current configuration",
                 )
                 .into()
             })

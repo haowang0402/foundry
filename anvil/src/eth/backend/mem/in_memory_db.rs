@@ -3,7 +3,7 @@
 use crate::{
     eth::{backend::db::{
         AsHashDB, Db, MaybeHashDatabase, SerializableAccountRecord, SerializableState, StateDb,
-    }, macros::node_info},
+    }},
     mem::state::{state_merkle_trie_root, trie_hash_db},
     revm::AccountInfo,
     Address, U256,
