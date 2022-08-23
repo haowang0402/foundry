@@ -1,9 +1,9 @@
 //! The in memory DB
 
 use crate::{
-    eth::backend::db::{
+    eth::{backend::db::{
         AsHashDB, Db, MaybeHashDatabase, SerializableAccountRecord, SerializableState, StateDb,
-    },
+    }, macros::node_info},
     mem::state::{state_merkle_trie_root, trie_hash_db},
     revm::AccountInfo,
     Address, U256,
@@ -111,6 +111,16 @@ impl Db for MemDb {
 
     fn current_state(&self) -> StateDb {
         StateDb::new(MemDb { inner: self.inner.clone(), ..Default::default() })
+    }
+
+    fn dump_state_to_json(&self) -> Option<String>{
+        match self.dump_state() {
+            None => None,
+            Some(state) => match serde_json::to_string(&state) {
+                Ok(str) => Some(str),
+                Err(_) => None
+            }
+        }
     }
 }
 

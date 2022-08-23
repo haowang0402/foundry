@@ -287,6 +287,7 @@ impl EthApi {
                 self.anvil_set_next_block_base_fee_per_gas(gas).await.to_rpc_result()
             }
             EthRequest::DumpState(_) => self.anvil_dump_state().await.to_rpc_result(),
+            EthRequest::DumpStateJson(_) => self.anvil_dump_state_json().await.to_rpc_result(),
             EthRequest::LoadState(buf) => self.anvil_load_state(buf).await.to_rpc_result(),
             EthRequest::EvmSnapshot(_) => self.evm_snapshot().await.to_rpc_result(),
             EthRequest::EvmRevert(id) => self.evm_revert(id).await.to_rpc_result(),
@@ -1376,6 +1377,11 @@ impl EthApi {
         self.backend.dump_state().await
     }
 
+
+    pub async fn anvil_dump_state_json(&self) -> Result<String> {
+        node_info!("anvil_dumpStateJson");
+        self.backend.dump_state_to_json().await
+    }
     /// Append chain state buffer to current chain. Will overwrite any conflicting addresses or
     /// storage.
     ///

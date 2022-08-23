@@ -509,6 +509,19 @@ impl Backend {
             })
     }
 
+    pub async fn dump_state_to_json(&self) -> Result<String, BlockchainError> {
+        self.db
+            .read()
+            .await
+            .dump_state_to_json()
+            .ok_or_else(|| {
+                RpcError::invalid_params(
+                    "Dumping state not supported with the current configuration",
+                )
+                .into()
+            })
+    }
+
     /// Deserialize and add all chain data to the backend storage
     pub async fn load_state(&self, buf: Bytes) -> Result<bool, BlockchainError> {
         let state: SerializableState =

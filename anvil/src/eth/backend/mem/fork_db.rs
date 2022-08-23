@@ -1,5 +1,6 @@
 use crate::{
     eth::backend::db::{Db, MaybeHashDatabase, SerializableState, StateDb},
+    eth::macros::node_info,
     revm::AccountInfo,
     Address, U256,
 };
@@ -7,7 +8,6 @@ use ethers::prelude::H256;
 use forge::revm::Database;
 use foundry_evm::executor::fork::database::ForkDbSnapshot;
 pub use foundry_evm::executor::fork::database::ForkedDatabase;
-
 /// Implement the helper for the fork database
 impl Db for ForkedDatabase {
     fn insert_account(&mut self, address: Address, account: AccountInfo) {
@@ -43,6 +43,11 @@ impl Db for ForkedDatabase {
     fn current_state(&self) -> StateDb {
         StateDb::new(self.create_snapshot())
     }
+    
+    fn dump_state_to_json(&self) -> Option<String> {
+        self.database().dump_state_to_json()
+    }
+
 }
 
 impl MaybeHashDatabase for ForkedDatabase {}

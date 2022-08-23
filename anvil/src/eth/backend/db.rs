@@ -73,6 +73,7 @@ pub trait Db: DatabaseRef + Database + DatabaseCommit + MaybeHashDatabase + Send
     /// Write all chain data to serialized bytes buffer
     fn dump_state(&self) -> Option<SerializableState>;
 
+    fn dump_state_to_json(&self) -> Option<String>;
     /// Deserialize and add all chain data to the backend storage
     fn load_state(&mut self, buf: SerializableState) -> bool;
 
@@ -128,6 +129,16 @@ impl<T: DatabaseRef + Send + Sync + Clone> Db for CacheDB<T> {
 
     fn current_state(&self) -> StateDb {
         StateDb::new(MemDb::default())
+    }
+
+    fn dump_state_to_json(&self) -> Option<String>{
+        match self.dump_state() {
+            None => None,
+            Some(state) => match serde_json::to_string(&state) {
+                Ok(str) => Some(str),
+                Err(_) => None
+            }
+        }
     }
 }
 
