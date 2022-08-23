@@ -503,7 +503,7 @@ impl Backend {
             .map(|s| serde_json::to_vec(&s).unwrap_or_default().into())
             .ok_or_else(|| {
                 RpcError::invalid_params(
-                    "Dumping state not supported with the current configuration",
+                    "Debug Dumping state not supported with the current configuration",
                 )
                 .into()
             })
