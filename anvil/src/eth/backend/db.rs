@@ -112,7 +112,26 @@ impl<T: DatabaseRef + Send + Sync + Clone> Db for CacheDB<T> {
     }
 
     fn dump_state(&self) -> Option<SerializableState> {
-        None
+        let accounts = self
+            .accounts
+            .clone()
+            .into_iter()
+            .map(|(k, v)| {
+                let code =
+                    v.info.code.unwrap_or_else(|| self.code_by_hash(v.info.code_hash)).to_checked();
+                (
+                    k,
+                    SerializableAccountRecord {
+                        nonce: v.info.nonce,
+                        balance: v.info.balance,
+                        code: code.bytes()[..code.len()].to_vec().into(),
+                        storage: v.storage.into_iter().collect(),
+                    },
+                )
+            })
+            .collect();
+
+        Some(SerializableState { accounts })
     }
 
     fn load_state(&mut self, _buf: SerializableState) -> bool {
@@ -131,13 +150,13 @@ impl<T: DatabaseRef + Send + Sync + Clone> Db for CacheDB<T> {
         StateDb::new(MemDb::default())
     }
 
-    fn dump_state_to_json(&self) -> Option<String>{
+    fn dump_state_to_json(&self) -> Option<String> {
         match self.dump_state() {
             None => None,
             Some(state) => match serde_json::to_string(&state) {
                 Ok(str) => Some(str),
-                Err(_) => None
-            }
+                Err(_) => None,
+            },
         }
     }
 }
